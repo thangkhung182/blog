@@ -1,6 +1,16 @@
 const express = require("express")
 const path = require("path")
 const ejs = require("ejs")
+const mongoose = require("mongoose")
+mongoose.connect("mongodb://localhost/blog", {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+}).then(() => 
+    console.log("connection to database established")
+).catch(err => {
+    console.log(`db error ${err.message}`)
+})
+
 
 const app = new express()
 app.use(express.static("public"))

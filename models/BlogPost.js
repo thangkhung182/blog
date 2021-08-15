@@ -5,6 +5,7 @@ const BlogPostSchema = new Schema({
     title: String,
     body: String,
     username: String,
+    image: String,
     createdOn: {
         type: Date,
         default: new Date()

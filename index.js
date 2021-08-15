@@ -22,12 +22,14 @@ const bodyParser = require("body-parser")
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+const fileUpload = require("express-fileupload")
+app.use(fileUpload())
+
 app.get("/", async (req, res) => {
     const blogposts = await BlogPost.find({})
     res.render("home", {
         blogposts: blogposts
     })
-    //res.render("index")
 })
 
 app.get("/about", (req, res) => {
@@ -55,8 +57,16 @@ app.get("/posts/new", (req, res) => {
 })
 
 app.post("/posts/store", async (req, res) => {
-    await BlogPost.create(req.body)
-    res.redirect("/")
+    let image = req.files.image
+    image.mv(path.resolve(__dirname, "public/img", image.name),
+        async (err) => {
+            await BlogPost.create({
+                ...req.body,
+                image: "/img/" + image.name
+            })
+            res.redirect("/")
+        }
+    )
 })
 
 app.listen(4000, () => {
